@@ -6,7 +6,6 @@ use App\Models\Attendance;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
@@ -14,9 +13,6 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class AttendanceExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
 {
-    /**
-     * @param  array{tanggal_mulai?: string, tanggal_selesai?: string, intern_id?: int, mentor_id?: int, status?: string}  $filters
-     */
     public function __construct(protected array $filters = []) {}
 
     public function query(): Builder
@@ -59,6 +55,16 @@ class AttendanceExport implements FromQuery, WithHeadings, WithMapping, ShouldAu
             'Jam Pulang',
             'Status',
             'Keterlambatan (menit)',
+            'Latitude Check-in',
+            'Longitude Check-in',
+            'Accuracy Check-in (m)',
+            'Distance Check-in (m)',
+            'Status Lokasi Check-in',
+            'Latitude Check-out',
+            'Longitude Check-out',
+            'Accuracy Check-out (m)',
+            'Distance Check-out (m)',
+            'Status Lokasi Check-out',
         ];
     }
 
@@ -77,6 +83,16 @@ class AttendanceExport implements FromQuery, WithHeadings, WithMapping, ShouldAu
             $attendance->waktu_pulang?->format('H:i') ?? '-',
             ucfirst($attendance->status),
             $attendance->keterlambatan,
+            $attendance->latitude ?? '-',
+            $attendance->longitude ?? '-',
+            $attendance->accuracy_check_in ?? '-',
+            $attendance->distance_check_in ?? '-',
+            $attendance->location_status_check_in ? ucfirst($attendance->location_status_check_in) : '-',
+            $attendance->latitude ?? '-',
+            $attendance->longitude ?? '-',
+            $attendance->accuracy_check_out ?? '-',
+            $attendance->distance_check_out ?? '-',
+            $attendance->location_status_check_out ? ucfirst($attendance->location_status_check_out) : '-',
         ];
     }
 

@@ -11,6 +11,7 @@ use App\Http\Controllers\Mentor\DashboardController as MentorDashboardController
 use App\Http\Controllers\MentorController;
 use App\Http\Controllers\WorkScheduleController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\Admin\OfficeSettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -38,6 +39,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/files/leave-requests/{leaveRequest}/evidence', [FileController::class, 'leaveRequestEvidence'])
         ->name('files.leave-requests.evidence');
 
+    Route::get('/files/attendance/{attendance}/photo', [FileController::class, 'attendancePhoto'])
+    ->name('files.attendance.photo');
+
     /*
     |--------------------------------------------------------------------
     | ADMIN
@@ -51,6 +55,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('mentors', MentorController::class);
         Route::resource('periods', InternshipPeriodController::class)->except(['show']);
         Route::resource('schedules', WorkScheduleController::class)->except(['show']);
+        Route::resource('office-settings', OfficeSettingController::class)->except(['show']);
 
         Route::get('/attendances', [AttendanceController::class, 'adminIndex'])->name('attendances.index');
         Route::put('/attendances/{attendance}', [AttendanceController::class, 'update'])->name('attendances.update');
@@ -92,8 +97,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [InternDashboardController::class, 'index'])->name('dashboard');
 
         Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])
+            ->middleware('throttle:10,1')
             ->name('attendance.check-in');
         Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut'])
+            ->middleware('throttle:10,1')
             ->name('attendance.check-out');
         Route::get('/attendance/history', [AttendanceController::class, 'history'])
             ->name('attendance.history');

@@ -23,6 +23,12 @@ class Attendance extends Model
         'longitude',
         'foto_check_in',
         'foto_check_out',
+        'accuracy_check_in',
+        'accuracy_check_out',
+        'distance_check_in',
+        'distance_check_out',
+        'location_status_check_in',
+        'location_status_check_out',
     ];
 
     protected function casts(): array
@@ -34,6 +40,10 @@ class Attendance extends Model
             'keterlambatan' => 'integer',
             'latitude' => 'decimal:7',
             'longitude' => 'decimal:7',
+            'accuracy_check_in' => 'integer',
+            'accuracy_check_out' => 'integer',
+            'distance_check_in' => 'decimal:2',
+            'distance_check_out' => 'decimal:2',
         ];
     }
 

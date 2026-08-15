@@ -6,6 +6,7 @@ use App\Http\Requests\CheckInRequest;
 use App\Http\Requests\CheckOutRequest;
 use App\Models\Attendance;
 use App\Services\AttendanceService;
+use App\Services\LocationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -14,38 +15,75 @@ use Illuminate\View\View;
 class AttendanceController extends Controller
 {
     public function __construct(
-        protected AttendanceService $attendanceService
-    ) {}
+    protected AttendanceService $attendanceService,
+    protected LocationService $locationService
+) {}
 
     public function checkIn(CheckInRequest $request): RedirectResponse
-    {
-        $intern = $request->user()->intern;
-        $validated = $request->validated();
+{
+    $intern = $request->user()->intern;
+    $validated = $request->validated();
 
-        if ($request->hasFile('foto_check_in')) {
-            $validated['foto_check_in'] = $request->file('foto_check_in')
-                ->store('attendance/check-in', 'private');
-        }
+    $locationData = [];
 
-        $this->attendanceService->checkIn($intern, $validated);
+    if (config('attendance.require_location')) {
+        $locationResult = $this->locationService->validateLocation(
+            (float) $validated['latitude'],
+            (float) $validated['longitude'],
+            (float) $validated['accuracy']
+        );
 
-        return back()->with('success', 'Check-in berhasil dicatat.');
+        $locationData = [
+            'accuracy_check_in' => (int) round($locationResult['accuracy']),
+            'distance_check_in' => $locationResult['distance'],
+            'location_status_check_in' => 'valid',
+        ];
     }
+
+    if ($request->hasFile('foto_check_in')) {
+        $validated['foto_check_in'] = $request->file('foto_check_in')->store(
+            'attendance-photos/' . $intern->id . '/' . now()->format('Y-m-d'),
+            'private'
+        );
+    }
+
+    $this->attendanceService->checkIn($intern, array_merge($validated, $locationData));
+
+    return back()->with('success', 'Check-in berhasil dicatat.');
+}
 
     public function checkOut(CheckOutRequest $request): RedirectResponse
-    {
-        $intern = $request->user()->intern;
-        $validated = $request->validated();
+{
+    $intern = $request->user()->intern;
+    $validated = $request->validated();
 
-        if ($request->hasFile('foto_check_out')) {
-            $validated['foto_check_out'] = $request->file('foto_check_out')
-                ->store('attendance/check-out', 'private');
-        }
+    $locationData = [];
 
-        $this->attendanceService->checkOut($intern, $validated);
+    if (config('attendance.require_location')) {
+        $locationResult = $this->locationService->validateLocation(
+            (float) $validated['latitude'],
+            (float) $validated['longitude'],
+            (float) $validated['accuracy']
+        );
 
-        return back()->with('success', 'Check-out berhasil dicatat.');
+        $locationData = [
+            'accuracy_check_out' => (int) round($locationResult['accuracy']),
+            'distance_check_out' => $locationResult['distance'],
+            'location_status_check_out' => 'valid',
+        ];
     }
+
+    if ($request->hasFile('foto_check_out')) {
+        $validated['foto_check_out'] = $request->file('foto_check_out')->store(
+            'attendance-photos/' . $intern->id . '/' . now()->format('Y-m-d'),
+            'private'
+        );
+    }
+
+    $this->attendanceService->checkOut($intern, array_merge($validated, $locationData));
+
+    return back()->with('success', 'Check-out berhasil dicatat.');
+}
 
     public function history(Request $request): View
     {

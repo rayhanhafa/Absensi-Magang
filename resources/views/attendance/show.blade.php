@@ -20,18 +20,59 @@
         </x-card>
 
         <x-card title="Lokasi & Bukti Foto">
-            @if ($attendance->latitude && $attendance->longitude)
-                <p class="text-sm text-slate-600 mb-3">
-                    Koordinat: {{ $attendance->latitude }}, {{ $attendance->longitude }}
-                </p>
-            @else
-                <p class="text-sm text-slate-400 mb-3">Data lokasi tidak tersedia.</p>
+    @if ($attendance->latitude && $attendance->longitude)
+        <div class="mb-4 text-sm space-y-2">
+            <div class="flex justify-between">
+                <span class="text-slate-500">Koordinat</span>
+                <span class="font-medium text-slate-800">{{ $attendance->latitude }}, {{ $attendance->longitude }}</span>
+            </div>
+            @if ($attendance->accuracy_check_in)
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Akurasi Check-in</span>
+                    <span class="font-medium text-slate-800">±{{ $attendance->accuracy_check_in }}m</span>
+                </div>
             @endif
+            @if ($attendance->distance_check_in !== null)
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Jarak Check-in</span>
+                    <span class="font-medium text-slate-800">{{ $attendance->distance_check_in }}m</span>
+                </div>
+            @endif
+            @if ($attendance->location_status_check_in)
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Status Lokasi Check-in</span>
+                    <x-badge :status="$attendance->location_status_check_in === 'valid' ? 'hadir' : 'alpa'" />
+                </div>
+            @endif
+            @if ($attendance->distance_check_out !== null)
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Jarak Check-out</span>
+                    <span class="font-medium text-slate-800">{{ $attendance->distance_check_out }}m</span>
+                </div>
+            @endif
+        </div>
+    @else
+        <p class="text-sm text-slate-400 mb-4">Data lokasi tidak tersedia.</p>
+    @endif
 
-            @if (! $attendance->foto_check_in && ! $attendance->foto_check_out)
-                <p class="text-sm text-slate-400">Belum ada foto bukti absensi.</p>
-            @endif
-        </x-card>
+    @if ($attendance->foto_check_in)
+        <div class="mb-4">
+            <p class="text-xs text-slate-500 mb-1.5">Selfie Check-in</p>
+            <img src="{{ route('files.attendance.photo', [$attendance, 'type' => 'check-in']) }}" class="w-full rounded-lg aspect-square object-cover" alt="Selfie check-in">
+        </div>
+    @endif
+
+    @if ($attendance->foto_check_out)
+        <div>
+            <p class="text-xs text-slate-500 mb-1.5">Selfie Check-out</p>
+            <img src="{{ route('files.attendance.photo', [$attendance, 'type' => 'check-out']) }}" class="w-full rounded-lg aspect-square object-cover" alt="Selfie check-out">
+        </div>
+    @endif
+
+    @if (! $attendance->foto_check_in && ! $attendance->foto_check_out)
+        <p class="text-sm text-slate-400">Belum ada foto bukti absensi.</p>
+    @endif
+</x-card>
     </div>
 
     <div class="mt-6">

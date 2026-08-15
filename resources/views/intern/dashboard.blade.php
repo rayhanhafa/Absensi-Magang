@@ -6,38 +6,42 @@
 
     <div class="grid lg:grid-cols-3 gap-6 mb-6">
         <x-card title="Status Absensi Hari Ini" class="lg:col-span-2">
-            @if ($absensiHariIni)
-                <div class="grid grid-cols-3 gap-4 mb-5">
-                    <div>
-                        <p class="text-xs text-slate-500 mb-1">Jam Masuk</p>
-                        <p class="font-semibold text-slate-800">{{ $absensiHariIni->waktu_masuk?->format('H:i') ?? '-' }}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-500 mb-1">Jam Pulang</p>
-                        <p class="font-semibold text-slate-800">{{ $absensiHariIni->waktu_pulang?->format('H:i') ?? '-' }}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-slate-500 mb-1">Status</p>
-                        <x-badge :status="$absensiHariIni->status" />
-                    </div>
-                </div>
+    @if ($absensiHariIni)
+        <div class="grid grid-cols-3 gap-4 mb-5">
+            <div>
+                <p class="text-xs text-slate-500 mb-1">Jam Masuk</p>
+                <p class="font-semibold text-slate-800">{{ $absensiHariIni->waktu_masuk?->format('H:i') ?? '-' }}</p>
+            </div>
+            <div>
+                <p class="text-xs text-slate-500 mb-1">Jam Pulang</p>
+                <p class="font-semibold text-slate-800">{{ $absensiHariIni->waktu_pulang?->format('H:i') ?? '-' }}</p>
+            </div>
+            <div>
+                <p class="text-xs text-slate-500 mb-1">Status</p>
+                <x-badge :status="$absensiHariIni->status" />
+            </div>
+        </div>
 
-                @if ($absensiHariIni->waktu_pulang)
-                    <p class="text-sm text-slate-500 bg-slate-50 rounded-lg px-4 py-3">Absensi hari ini selesai.</p>
-                @else
-                    <form method="POST" action="{{ route('intern.attendance.check-out') }}">
-                        @csrf
-                        <x-button type="submit" variant="danger">Check Out</x-button>
-                    </form>
-                @endif
-            @else
-                <p class="text-sm text-slate-500 mb-4">Anda belum melakukan absensi hari ini.</p>
-                <form method="POST" action="{{ route('intern.attendance.check-in') }}">
-                    @csrf
-                    <x-button type="submit" variant="primary">Check In</x-button>
-                </form>
-            @endif
-        </x-card>
+        @if ($absensiHariIni->waktu_pulang)
+            <p class="text-sm text-slate-500 bg-slate-50 rounded-lg px-4 py-3">Absensi hari ini selesai.</p>
+        @else
+            @include('intern.attendance.partials.flow', [
+                'action' => route('intern.attendance.check-out'),
+                'photoFieldName' => 'foto_check_out',
+                'buttonLabel' => 'Check Out',
+                'buttonVariant' => 'danger',
+            ])
+        @endif
+    @else
+        <p class="text-sm text-slate-500 mb-4">Anda belum melakukan absensi hari ini.</p>
+        @include('intern.attendance.partials.flow', [
+            'action' => route('intern.attendance.check-in'),
+            'photoFieldName' => 'foto_check_in',
+            'buttonLabel' => 'Check In',
+            'buttonVariant' => 'primary',
+        ])
+    @endif
+</x-card>
 
         <x-card title="Ringkasan Bulan Ini">
             <dl class="space-y-3 text-sm">

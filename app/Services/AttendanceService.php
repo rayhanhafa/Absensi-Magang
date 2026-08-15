@@ -47,6 +47,9 @@ class AttendanceService
                 'latitude' => $data['latitude'] ?? null,
                 'longitude' => $data['longitude'] ?? null,
                 'foto_check_in' => $data['foto_check_in'] ?? null,
+                'accuracy_check_in' => $data['accuracy_check_in'] ?? null,
+                'distance_check_in' => $data['distance_check_in'] ?? null,
+                'location_status_check_in' => $data['location_status_check_in'] ?? null,
             ]);
         });
     }
@@ -84,6 +87,9 @@ class AttendanceService
                 'latitude' => $data['latitude'] ?? $attendance->latitude,
                 'longitude' => $data['longitude'] ?? $attendance->longitude,
                 'foto_check_out' => $data['foto_check_out'] ?? null,
+                'accuracy_check_out' => $data['accuracy_check_out'] ?? $attendance->accuracy_check_out,
+                'distance_check_out' => $data['distance_check_out'] ?? $attendance->distance_check_out,
+                'location_status_check_out' => $data['location_status_check_out'] ?? $attendance->location_status_check_out,
             ]);
 
             return $attendance->fresh();

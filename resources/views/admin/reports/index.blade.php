@@ -65,13 +65,14 @@
             <table class="w-full text-sm">
                 <thead>
                     <tr class="text-left text-slate-500 border-b border-slate-200">
-                        <th class="px-5 py-3 font-medium">Nama</th>
-                        <th class="px-5 py-3 font-medium">Tanggal</th>
-                        <th class="px-5 py-3 font-medium">Jam Masuk</th>
-                        <th class="px-5 py-3 font-medium">Jam Pulang</th>
-                        <th class="px-5 py-3 font-medium">Status</th>
-                        <th class="px-5 py-3 font-medium">Keterlambatan</th>
-                    </tr>
+                    <th class="px-5 py-3 font-medium">Nama</th>
+                    <th class="px-5 py-3 font-medium">Tanggal</th>
+                    <th class="px-5 py-3 font-medium">Jam Masuk</th>
+                    <th class="px-5 py-3 font-medium">Jam Pulang</th>
+                    <th class="px-5 py-3 font-medium">Status</th>
+                    <th class="px-5 py-3 font-medium">Keterlambatan</th>
+                    <th class="px-5 py-3 font-medium">Lokasi</th>
+                </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse ($attendances as $attendance)
@@ -82,6 +83,15 @@
                             <td class="px-5 py-3 text-slate-600">{{ $attendance->waktu_pulang?->format('H:i') ?? '-' }}</td>
                             <td class="px-5 py-3"><x-badge :status="$attendance->status" /></td>
                             <td class="px-5 py-3 text-slate-600">{{ $attendance->keterlambatan > 0 ? $attendance->keterlambatan . ' menit' : '-' }}</td>
+                            <td class="px-5 py-3">
+                                @if ($attendance->location_status_check_in === 'valid')
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Valid</span>
+                                @elseif ($attendance->location_status_check_in)
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">Invalid</span>
+                                @else
+                                    <span class="text-slate-400 text-xs">-</span>
+                                @endif
+                            </td>
                         </tr>
                     @empty
                         <tr>

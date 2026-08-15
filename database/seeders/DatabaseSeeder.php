@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             InternshipPeriodSeeder::class,
             WorkScheduleSeeder::class,
+            OfficeSettingSeeder::class,
             UserSeeder::class,
             MentorSeeder::class,
             InternSeeder::class,

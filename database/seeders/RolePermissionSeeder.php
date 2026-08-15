@@ -14,31 +14,32 @@ class RolePermissionSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         $permissions = [
-            // Dashboard
-            'view dashboard',
+                // Dashboard
+                'view dashboard',
 
-            // User & Master Data
-            'manage users',
-            'manage interns',
-            'manage mentors',
-            'manage internship periods',
-            'manage work schedules',
+                // User & Master Data
+                'manage users',
+                'manage interns',
+                'manage mentors',
+                'manage internship periods',
+                'manage work schedules',
+                'manage office settings',   // BARU
 
-            // Attendance
-            'view attendances',
-            'manage attendances',
-            'check in',
-            'check out',
+                // Attendance
+                'view attendances',
+                'manage attendances',
+                'check in',
+                'check out',
 
-            // Leave Request
-            'create leave request',
-            'view leave requests',
-            'manage leave requests',
+                // Leave Request
+                'create leave request',
+                'view leave requests',
+                'manage leave requests',
 
-            // Report
-            'view reports',
-            'export reports',
-        ];
+                // Report
+                'view reports',
+                'export reports',
+            ];
 
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);

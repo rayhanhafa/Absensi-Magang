@@ -6,6 +6,7 @@
             ['label' => 'Mentor', 'route' => 'admin.mentors.index', 'icon' => 'user-group'],
             ['label' => 'Periode Magang', 'route' => 'admin.periods.index', 'icon' => 'calendar'],
             ['label' => 'Jadwal Kerja', 'route' => 'admin.schedules.index', 'icon' => 'clock'],
+            ['label' => 'Lokasi Absensi', 'route' => 'admin.office-settings.index', 'icon' => 'calendar'],
             ['label' => 'Absensi', 'route' => 'admin.attendances.index', 'icon' => 'check-circle'],
             ['label' => 'Laporan', 'route' => 'admin.reports.index', 'icon' => 'document'],
         ],

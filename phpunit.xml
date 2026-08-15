@@ -32,5 +32,7 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <env name="ATTENDANCE_REQUIRE_LOCATION" value="false"/>
+        <env name="ATTENDANCE_MAX_ACCURACY" value="100"/>
     </php>
 </phpunit>
