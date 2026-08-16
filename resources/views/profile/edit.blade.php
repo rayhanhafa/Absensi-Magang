@@ -1,29 +1,28 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
-            </div>
+<x-app-layout title="Pengaturan Profil">
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">Pengaturan Profil</h1>
+            <p class="text-sm text-slate-500 mt-1">Kelola informasi profil dan keamanan akun Anda.</p>
         </div>
+    </div>
+
+    <div class="space-y-6 max-w-4xl">
+        <x-card class="shadow-sm border-slate-200/80">
+            <div class="max-w-xl">
+                @include('profile.partials.update-profile-information-form')
+            </div>
+        </x-card>
+
+        <x-card class="shadow-sm border-slate-200/80">
+            <div class="max-w-xl">
+                @include('profile.partials.update-password-form')
+            </div>
+        </x-card>
+
+        <x-card class="shadow-sm border-slate-200/80 border-red-200/80">
+            <div class="max-w-xl">
+                @include('profile.partials.delete-user-form')
+            </div>
+        </x-card>
     </div>
 </x-app-layout>

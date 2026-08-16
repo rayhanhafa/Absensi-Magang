@@ -1,3 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    * {
+        @apply border-slate-200;
+    }
+}
+
+@layer components {
+    /* Scrollbar */
+    .scrollbar-thin {
+        scrollbar-width: thin;
+        scrollbar-color: theme('colors.slate.300') transparent;
+    }
+    .scrollbar-thin::-webkit-scrollbar {
+        width: 5px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+        background-color: theme('colors.slate.300');
+        border-radius: 20px;
+    }
+
+    /* Table row hover */
+    .table-row-hover tbody tr {
+        @apply transition-colors duration-150;
+    }
+    .table-row-hover tbody tr:hover {
+        @apply bg-slate-50;
+    }
+}

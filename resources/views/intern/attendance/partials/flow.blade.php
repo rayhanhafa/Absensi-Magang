@@ -1,51 +1,81 @@
-<div x-data="attendanceFlow('{{ $action }}', {{ config('attendance.require_location') ? 'true' : 'false' }})" x-init="photoFieldName = '{{ $photoFieldName }}'">
+<div x-data="attendanceFlow('{{ $action }}', {{ config('attendance.require_location') ? 'true' : 'false' }})" x-init="photoFieldName = '{{ $photoFieldName }}'" class="w-full">
 
     <template x-if="step === 'idle'">
-        <x-button type="button" :variant="$buttonVariant" @click="start()">{{ $buttonLabel }}</x-button>
+        <x-button type="button" size="lg" :variant="$buttonVariant" @click="start()" class="w-full sm:w-auto font-semibold shadow-md">
+            {{ $buttonLabel }}
+        </x-button>
     </template>
 
     <template x-if="step === 'locating'">
-        <p class="text-sm text-slate-500 flex items-center gap-2">
-            <svg class="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path></svg>
-            📍 Mendeteksi lokasi Anda...
-        </p>
+        <div class="flex items-center gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <svg class="animate-spin w-5 h-5 text-primary-600" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            <p class="text-sm font-medium text-slate-700">Mendeteksi lokasi Anda...</p>
+        </div>
     </template>
 
     <template x-if="step === 'location-error'">
-        <div>
-            <p class="text-sm text-red-600 mb-3" x-text="errorMessage"></p>
-            <x-button type="button" variant="secondary" @click="start()">Coba Lagi</x-button>
+        <div class="p-4 rounded-xl bg-red-50 border border-red-100">
+            <p class="text-sm text-red-600 font-medium mb-3 flex items-center gap-2">
+                <x-dynamic-icon name="x-circle" class="w-5 h-5" />
+                <span x-text="errorMessage"></span>
+            </p>
+            <x-button type="button" variant="secondary" size="sm" @click="start()">Coba Lagi</x-button>
         </div>
     </template>
 
     <template x-if="step === 'camera'">
-        <div @photo-captured="handlePhoto($event.detail.file)">
-            <p class="text-sm text-green-700 mb-3">📍 Lokasi ditemukan (akurasi ±<span x-text="Math.round(location.accuracy)"></span>m)</p>
-            <x-camera-capture :label="$buttonVariant === 'primary' ? 'Selfie Check-in' : 'Selfie Check-out'" />
+        <div @photo-captured="handlePhoto($event.detail.file)" class="animate-fade-in space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-100">
+                <x-dynamic-icon name="map-pin" class="w-4 h-4" />
+                Lokasi ditemukan (±<span x-text="Math.round(location.accuracy)"></span>m)
+            </div>
+            
+            <div class="rounded-xl overflow-hidden shadow-card border border-slate-200 bg-slate-900">
+                <x-camera-capture :label="$buttonVariant === 'primary' ? 'Selfie Check-in' : 'Selfie Check-out'" class="p-4 text-white" />
+            </div>
         </div>
     </template>
 
     <template x-if="step === 'ready'">
-        <div>
-            <p class="text-sm text-green-700 mb-3">📍 Lokasi ditemukan (akurasi ±<span x-text="Math.round(location.accuracy)"></span>m)</p>
+        <div class="animate-fade-in space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-100">
+                <x-dynamic-icon name="map-pin" class="w-4 h-4" />
+                Lokasi ditemukan (±<span x-text="Math.round(location.accuracy)"></span>m)
+            </div>
 
             <template x-if="errorMessage">
-                <p class="text-sm text-red-600 mb-3" x-text="errorMessage"></p>
-            </template>
-
-            <template x-if="photoPreviewUrl">
-                <div class="mb-3">
-                    <img :src="photoPreviewUrl" class="w-40 rounded-lg aspect-square object-cover" alt="Preview selfie">
-                    <button type="button" class="text-xs text-slate-500 hover:text-slate-700 mt-1" @click="retakePhoto()">Ambil ulang foto</button>
+                <div class="p-3 rounded-lg bg-red-50 border border-red-100 flex items-start gap-2">
+                    <x-dynamic-icon name="x-circle" class="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                    <p class="text-sm text-red-600 font-medium" x-text="errorMessage"></p>
                 </div>
             </template>
 
-            <x-button type="button" :variant="$buttonVariant" @click="submit()">{{ $buttonLabel }}</x-button>
+            <template x-if="photoPreviewUrl">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <img :src="photoPreviewUrl" class="w-48 max-w-full rounded-lg shadow-sm border border-slate-300 object-cover aspect-video mb-3" alt="Preview selfie">
+                    <x-button type="button" variant="secondary" size="sm" @click="retakePhoto()">
+                        <x-dynamic-icon name="camera" class="w-4 h-4 mr-1" /> Ambil Ulang
+                    </x-button>
+                </div>
+            </template>
+
+            <x-button type="button" size="lg" :variant="$buttonVariant" @click="submit()" class="w-full sm:w-auto font-semibold shadow-md">
+                Kirim {{ $buttonLabel }}
+            </x-button>
         </div>
     </template>
 
     <template x-if="step === 'submitting'">
-        <p class="text-sm text-slate-500">Menyimpan absensi...</p>
+        <div class="flex items-center gap-3 p-4 rounded-xl bg-primary-50 border border-primary-100">
+            <svg class="animate-spin w-5 h-5 text-primary-600" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            <p class="text-sm font-medium text-primary-700">Menyimpan absensi...</p>
+        </div>
     </template>
 
 </div>
